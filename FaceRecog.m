@@ -1,4 +1,6 @@
 
+
+
 %PreProcessing the images in db
 %Only for us
 function image = preProcess(img)
