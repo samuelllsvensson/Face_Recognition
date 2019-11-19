@@ -3,7 +3,7 @@ BW = im2bw(img);
 s = regionprops(BW,'centroid');
 centroids = cat(1,s.Centroid);
 
-[m,n] = size(centroids)
+[m,n] = size(centroids);
 angle = 0;
 
 if(m > 1 && n > 1)
