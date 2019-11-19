@@ -10,6 +10,8 @@ end
 %Image processing function
 function image = imgProcess(img)
     %Call all image processing functions
+    image = lightCompensation(img); % Try with lightCompensationAlt also
+    
     image = img;
 end
 
