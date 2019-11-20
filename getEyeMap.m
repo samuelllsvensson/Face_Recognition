@@ -1,12 +1,9 @@
-
-
 % ---------- ILLUMINATION-BASED METHOD -----------
 % Original
 function image = getEyeMap(img)
-
     % Read image
     rgbImage = img;
-    
+
     subplot(6,4,1)
     imshow(rgbImage)
     title('original image');
@@ -43,39 +40,41 @@ function image = getEyeMap(img)
     title('CR^2');
 
     % Cb^2 FOR EYEMAPC
-    ccb=cb.^2;
+    cb2=cb.^2;
     subplot(6,4,9)
-    imshow(ccb)
+    imshow(cb2)
     title('CB^2');
 
     % Cr~^2 FOR EYEMAPC
-    ccr=(1-cr).^2;
+    cr2Inv=(1-cr).^2;
     subplot(6,4,10)
-    imshow(ccr)
+    imshow(cr2Inv)
     title('(1-CR)^2');
 
     % Cb/Cr FOR EYEMAPC
-    cbcr=ccb./cr;
+    cbcr=(cb./cr);
+    cbcr=cbcr./max(max(cbcr));
     subplot(6,4,11)
     imshow(cbcr)
     title('CB/CR');
 
     % EYE MAP C
-    g=1./3;
+    g=1/3;
     % Cb^2
-    l=g*ccb;
-    % Cb/Cr
-    m=g*ccr;
+    l=g*cb2;
+    % Cr^2
+    m=g*cr2;
     % Cb/Cr
     n=g*cbcr;
     eyemapC=l+m+n;
+    eyemapChist = histeq(eyemapC);
     subplot(6,4,12)
-    imshow(eyemapC)
+    imshow(eyemapChist)
     title('Eye Map C');
 
 
     % DILATE AND ERODE
-    SE=strel('disk',10,4);
+    SE=strel('disk',10);
     o=imdilate(y,SE);
     p=imerode(y,SE) + 1;
     eyemapL=o./p;
@@ -84,20 +83,19 @@ function image = getEyeMap(img)
     title('Eye Map L');
 
     % TOTAL EYEMAP 
-    %Eyemap = imfuse(eyemapC, eyemapL, 'blend');
-    Eyemap = eyemapC.*eyemapL; % BORDE VARA DENNA ENLIGT PAPER
+    Eyemap = eyemapChist.*eyemapL; % BORDE VARA DENNA ENLIGT PAPER
     subplot(6,4,14)
     imshow(Eyemap)
     title('Eye Map C fused with Eye Map L')
 
     % DILATED AND THRESHHOLDED
-    SE1=strel('disk',9,8);
+    SE1=strel('disk', 12);
     q = imdilate(Eyemap, SE1);
-    threshold =1; % custom threshold value
-    q_bw = q > threshold;
+    threshold = 0.75; % custom threshold value
+    qMask = q > threshold;
     %BW = imbinarize(q, 'adaptive');
     subplot(6,4,15)
-    imshow(q_bw)
+    imshow(qMask)
     title('Dilated and threshholded');
 
 
@@ -109,14 +107,15 @@ function image = getEyeMap(img)
     imshow(igray)
     title('Gray space');
     % HISTOGRAM EQUALIZED INTENSITY IMAGE
-    J=histeq(eyemapC);
+    J=histeq(igray);
     subplot(6,4,17)
     imshow(J)
     title('Histogram equalized');
-    threshold = 150; % custom threshold value
-    gray_thresh = igray > threshold;
+    threshold = 60; % custom threshold value
+    grayThresh = igray > threshold;
+    grayThreshInv = 1 - grayThresh;
     subplot(6,4,18)
-    imshow(gray_thresh)
+    imshow(grayThreshInv)
     title('Threshholded');
 
     % ---------- EDGE-DENSITY-BASED METHOD -----------
@@ -125,12 +124,12 @@ function image = getEyeMap(img)
     imshow(sobelIm)
     title('Sobel edges');
 
-    SE2=strel('disk',5,8);
+    SE2=strel('disk',8);
     sobelImD1 = imdilate(sobelIm, SE2);
     sobelImD2 = imdilate(sobelImD1, SE2);
     sobelImE1=imerode(sobelImD2,SE2);
     sobelImE2=imerode(sobelImE1,SE2);
-    sobelImE3=imerode(sobelImE2,SE);
+    sobelImE3=imerode(sobelImE2,SE2);
 
     subplot(6,4,20)
     imshow(sobelImE3)
@@ -138,25 +137,25 @@ function image = getEyeMap(img)
 
     % ---------- RESULTS ----------
     subplot(6,4,21)
-    imshow(q_bw)
+    imshow(qMask)
     title('Illumination-based');
     subplot(6,4,22)
-    imshow(gray_thresh)
+    imshow(grayThreshInv)
     title('Color-based');
     subplot(6,4,23)
     imshow(sobelImE3)
     title('Edge-density-based');
 
     % Final 
-    IC = q_bw & gray_thresh; 
-    IE = q_bw & sobelImE3;
-    CE = gray_thresh & sobelImE3;
+    IC = qMask & grayThreshInv; 
+    IE = qMask & sobelImE3;
+    CE = grayThreshInv & sobelImE3;
 
     OrTotal = IC | IE | CE; 
     subplot(6,4,24)
     imshow(OrTotal)
     title('Total (All methods)');
-    
+
     % ----------
     sgtitle('HYBRID METHOD FOR EYE DETECTION ')
     image = OrTotal;
