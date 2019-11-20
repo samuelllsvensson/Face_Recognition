@@ -1,36 +1,16 @@
 function imgRot = eyeAlignment(img)
-imgMod = mat2gray(img);
+BW = im2bw(img);
+s = regionprops(BW,'centroid');
+centroids = cat(1,s.Centroid);
 
-%Find closest rectangle arround eyes
-[row,col] = find(imgMod(:,:,1) == 1);
-eyeDist = abs(max(col) - min(col));
-eyeLevel = abs(max(row) - min(row));
+[m,n] = size(centroids);
+angle = 0;
 
-%Crop image to the closest rectangle
-se = strel('disk',10 ,8);
-imgMod = imerode(imgMod,se);
-imgMod = imcrop(imgMod,[min(col) min(row) eyeDist eyeLevel]);
-
-%Find new rows
-[row,~] = find(imgMod(:,:,1) == 1);
-
-minLevel = 1000;
-alpha = 1;
-finalAngle = 0;
-
-%Rotate by alpha until rectangle cant be smaller in height
-if(~isempty(row))
-    if(row(1) > row(length(row)))
-        alpha = -1;
-    end
-    while(abs(max(row) - min(row)) < minLevel)
-    imgMod = imrotate(imgMod, alpha);
-    minLevel = abs(max(row) - min(row));
-    [row,~] = find(imgMod(:,:,1) == 1);
-    finalAngle = finalAngle + alpha;
-    end
+if(m > 1 && n > 1)
+    eyeDist = centroids(2,1) - centroids(1,1);
+    eyeLevel = centroids(2,2) - centroids(1,2);
+    angle = radtodeg(atan(eyeLevel/eyeDist));
 end
 
-%Final rotation of the argument
-imgRot = imrotate(img, finalAngle);
+imgRot = imrotate(img, angle);
 end
