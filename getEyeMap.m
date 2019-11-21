@@ -112,10 +112,9 @@ function image = getEyeMap(img)
     imshow(J)
     title('Histogram equalized');
     threshold = 60; % custom threshold value
-    grayThresh = igray > threshold;
-    grayThreshInv = 1 - grayThresh;
+    grayThresh = igray < threshold;
     subplot(6,4,18)
-    imshow(grayThreshInv)
+    imshow(grayThresh)
     title('Threshholded');
 
     % ---------- EDGE-DENSITY-BASED METHOD -----------
@@ -140,16 +139,16 @@ function image = getEyeMap(img)
     imshow(qMask)
     title('Illumination-based');
     subplot(6,4,22)
-    imshow(grayThreshInv)
+    imshow(grayThresh)
     title('Color-based');
     subplot(6,4,23)
     imshow(sobelImE3)
     title('Edge-density-based');
 
     % Final 
-    IC = qMask & grayThreshInv; 
+    IC = qMask & grayThresh; 
     IE = qMask & sobelImE3;
-    CE = grayThreshInv & sobelImE3;
+    CE = grayThresh & sobelImE3;
 
     OrTotal = IC | IE | CE; 
     subplot(6,4,24)
