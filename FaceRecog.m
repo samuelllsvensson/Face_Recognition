@@ -33,6 +33,8 @@ end
 function id = tnm034(img)
     img = imgProcess(img); % illumination, color etc.
     img = faceDetect(img); %rotation, scale, normalization etc.
+    figure;
+    hold on;
     imshow(img)
     %featExtract(img) find features
     id = faceRecog(img); %Match features with db
