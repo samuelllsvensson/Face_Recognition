@@ -111,7 +111,7 @@ function image = getEyeMap(img)
     imshow(J)
     title('Histogram equalized');
     threshold = 20; % custom threshold value
-    grayThresh = igray < threshold;
+    grayThresh = J < threshold;
     grayThresh = ruleRefinements(grayThresh);
     subplot(6,4,18)
     imshow(grayThresh)
@@ -123,7 +123,7 @@ function image = getEyeMap(img)
     imshow(sobelIm)
     title('Sobel edges');
 
-    SE2=strel('disk',12);
+    SE2=strel('disk',5);
     sobelImD1 = imdilate(sobelIm, SE2);
     sobelImD2 = imdilate(sobelImD1, SE2);
     sobelImE1=imerode(sobelImD2,SE2);
