@@ -89,7 +89,7 @@ function image = getEyeMap(img)
     title('Eye Map C fused with Eye Map L')
 
     % DILATED AND THRESHHOLDED
-    SE1=strel('disk', 12);
+    SE1=strel('disk', 10);
     q = imdilate(Eyemap, SE1);
     threshold = 0.75; % custom threshold value
     qMask = q > threshold;

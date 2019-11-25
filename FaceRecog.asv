@@ -1,5 +1,18 @@
-originalImg = imread('DB1/db1_10.jpg');
-tnm034(originalImg);
+
+
+imgMask = getFaceMask(imgLight);
+imgEye = getEyeMap(imgMask);
+imshow(imgEye)
+%PreProcessing the images in db
+%Only for us
+function image = preProcess(img)
+    img = imread('DB1/db1_10.jpg');
+    %imageProcessing(img)
+    %faceDetection(img)
+    %featureExtraction(img)
+    image = img;
+end
+
 %Image processing function
 function image = imgProcess(img)
     %Call all image processing functions
@@ -11,8 +24,6 @@ end
 %Return final face image
 function face = faceDetect(img)
     %Call all face detection functions
-    img = getFaceMask(img);
-    img = getEyeMap(img);
     face = img;
 end
 
@@ -31,11 +42,8 @@ end
 
 %Main function
 function id = tnm034(img)
-    img = imgProcess(img); % illumination, color etc.
-    img = faceDetect(img); %rotation, scale, normalization etc.
-    imshow(img)
+    %imgProcess(img) illumination, color etc.
+    %faceDetect(img) rotation, scale, normalization etc.
     %featExtract(img) find features
-    id = faceRecog(img); %Match features with db
+    id = faceRecog(img) %Match features with db
 end
-
-
