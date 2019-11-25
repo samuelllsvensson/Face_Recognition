@@ -40,7 +40,7 @@ function image = getFaceMask(rgbImg)
     %subplot(1,3,3);
     %imshow(finalImg);
     %truesize;
-    image = rgbFaceMask;
+    image = mask;
 end
 
 

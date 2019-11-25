@@ -1,4 +1,4 @@
-im = imread("DB1/db1_06.jpg");
+im = imread("DB1/db1_15.jpg");
 imgProcess(im);
 
 %PreProcessing the images in db
@@ -16,10 +16,10 @@ function image = imgProcess(img)
     image = lightCompensationAlt(img); % Try with lightCompensationAlt also
     mask = getFaceMask(image);
     image = getEyeMap(image);
-    image = image.*mask;
-    figure;
-    hold on;
+    rgbFaceMask = rgbImg.*uint8(mask);
     imshow(image);
+    
+    image = img;
 end
 
 %Return final face image

@@ -93,11 +93,12 @@ function image = getEyeMap(img)
     q = imdilate(Eyemap, SE1);
     threshold = 0.75; % custom threshold value
     qMask = q > threshold;
-    qMask = ruleRefinements(qMask);
     %BW = imbinarize(q, 'adaptive');
     subplot(6,4,15)
     imshow(qMask)
     title('Dilated and threshholded');
+    
+    qMaskProps = regionprops(logical(, 'Solidity');
     % ---------- COLOR-BASED METHOD -----------
 
     % GRAY SPACE IMAGE
@@ -110,9 +111,8 @@ function image = getEyeMap(img)
     subplot(6,4,17)
     imshow(J)
     title('Histogram equalized');
-    threshold = 20; % custom threshold value
+    threshold = 60; % custom threshold value
     grayThresh = igray < threshold;
-    grayThresh = ruleRefinements(grayThresh);
     subplot(6,4,18)
     imshow(grayThresh)
     title('Threshholded');
@@ -123,14 +123,12 @@ function image = getEyeMap(img)
     imshow(sobelIm)
     title('Sobel edges');
 
-    SE2=strel('disk',12);
+    SE2=strel('disk',8);
     sobelImD1 = imdilate(sobelIm, SE2);
     sobelImD2 = imdilate(sobelImD1, SE2);
     sobelImE1=imerode(sobelImD2,SE2);
     sobelImE2=imerode(sobelImE1,SE2);
     sobelImE3=imerode(sobelImE2,SE2);
-    
-    sobelImE3 = ruleRefinements(sobelImE3);
 
     subplot(6,4,20)
     imshow(sobelImE3)
