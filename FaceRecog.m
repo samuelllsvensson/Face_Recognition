@@ -1,4 +1,4 @@
-im = imread("DB1/db1_06.jpg");
+im = imread("DB1/db1_09.jpg");
 imgProcess(im);
 
 %PreProcessing the images in db
