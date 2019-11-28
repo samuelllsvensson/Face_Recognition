@@ -3,6 +3,10 @@ function image = getCandidates(img)
     centroids = cat(1,props.Centroid);
     [m,n] = size(centroids);
     
+    if m < 3
+        return
+    end
+    
     candidateArr = [1,2,3]; % Array with most likely candidates
     bestAngle1 = 100000.0;
     bestAngle2 = 100000.0;
@@ -33,7 +37,7 @@ function image = getCandidates(img)
                 
                 % If conditions for face triangle are met - reassign new
                 % best candidates
-                if  (eye2(2) > eye1(2)*0.9 && eye2(2) < eye1(2)*1.1 && ...
+                if  (eye2(2) > eye1(2)*0.95 && eye2(2) < eye1(2)*1.05 && mouth(2) > eye1(2) &&...
                          mouth(1) > minX && mouth(1) < maxX && abs(angle1-critAngle) <= bestAngle1 && abs(angle2-critAngle) <= bestAngle2)
  
                     bestAngle1 = abs(angle1-critAngle);
@@ -58,5 +62,7 @@ function image = getCandidates(img)
             img(props(i).PixelIdxList) = 0; % Remove blobs
         end
     end
+    
     image = img;
+    
 end
