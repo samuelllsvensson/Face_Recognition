@@ -1,4 +1,4 @@
-originalImg = imread('DB1/db1_02.jpg');
+originalImg = imread('DB1/db1_09.jpg');
 tnm034(originalImg);
 
 %Image processing function
@@ -27,15 +27,17 @@ function face = faceDetect(img)
     [angle, dx, dy, leftEye, rightEye, mouth] = faceAlignment(face);
     
     % Size of cropped image
-    %xSize = (rightEye(1)-leftEye(1))+200;
-    %ySize = (mouth(2)-rightEye(2))+100;
+    xSize = (rightEye(1)-leftEye(1))+200;
+    ySize = (mouth(2)-rightEye(2))+100;
     
     % Normalize mask
     normMask = imrotate(face, angle);
     normMask = imtranslate(normMask,[dx,dy]);
-    targetSize = [330 260];
+    targetSize = [floor(xSize) floor(ySize)];
     r = centerCropWindow2d(size(normMask),targetSize);
     normMask = imcrop(normMask,r);
+    normMask = imresize(normMask, [330 260]);
+    size(normMask)
     
     % Normalize face
     normFace = imrotate(img, angle);
@@ -50,10 +52,10 @@ function face = faceDetect(img)
     normRightEye = centroids(3,:);
     normMouth = centroids(2,:);
     
-    % Create markers
-    pos = [normLeftEye; normRightEye; normMouth];
-    color = {'red','red','red'};
-    markedFace = insertMarker(normFace,pos,'x','color',color,'size',12);
+    % Create markers to show eye and mouth pos (before imresize)
+    %pos = [normLeftEye; normRightEye; normMouth];
+    %color = {'red','red','red'};
+    %markedFace = insertMarker(normFace,pos,'x','color',color,'size',12);
    
     % Plot normalized face
     figure;
@@ -74,7 +76,7 @@ function face = faceDetect(img)
     title('After Alignment');
     
     subplot(1,5,5)
-    imshow(markedFace);
+    imshow(normFace); % Change for markedFace to show eye and mouth pos
     title('Normalized face');
 end
 
