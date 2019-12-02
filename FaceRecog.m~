@@ -1,26 +1,5 @@
-baseVectors = zeros(85800, 4);
-
-originalImg = imread('DB1/db1_03.jpg');
-id = tnm034(originalImg);
-baseVectors(:, 1) = id(:);
-
-originalImg = imread('DB1/db1_04.jpg');
-id = tnm034(originalImg);
-baseVectors(:, 2) = id(:);
-
-originalImg = imread('DB1/db1_05.jpg');
-id = tnm034(originalImg);
-baseVectors(:, 3) = id(:);
-
-originalImg = imread('DB1/db1_06.jpg');
-id = tnm034(originalImg);
-baseVectors(:, 4) = id(:);
-
-avgFace = uint8((1.0/4.0)*sum(baseVectors, 2));
-
-avgApa = reshape(avgFace, [330, 260]);
-
-imshow(avgApa);
+originalImg = imread('DB1/db1_02.jpg');
+tnm034(originalImg);
 
 %Image processing function
 function image = imgProcess(img)
@@ -118,9 +97,7 @@ end
 function id = tnm034(img)
     img = imgProcess(img); % illumination, color etc.
     img = faceDetect(img); %rotation, scale, normalization etc.
-    
-    id = img;
 
     %featExtract(img) find features
-    %id = faceRecog(img); %Match features with db
+    id = faceRecog(img); %Match features with db
 end
