@@ -1,5 +1,27 @@
-originalImg = imread('DB1/db1_02.jpg');
-tnm034(originalImg);
+baseVectors = zeros(85800, 16);
+faceVariations = zeros(85800, 15);
+
+for i=1:16
+  originalImg = imread(sprintf('DB1/db1_%02d.jpg', i));
+  id = tnm034(originalImg);
+  baseVectors(:, i) = id(:);
+end
+
+baseVectors(:, 8) = [];
+
+avgFace = (1.0/15.0)*sum(baseVectors, 2);
+faceVariations = baseVectors - avgFace;
+
+C = faceVariations' * faceVariations;
+
+[eigVec, eigVal] = eig(C);
+
+bestEigVecs = faceVariations * eigVec;
+
+apa = bestEigVe
+
+imshow(reshape(bestEigVecs(:, 2), [330, 260]));
+
 
 %Image processing function
 function image = imgProcess(img)
@@ -27,13 +49,13 @@ function face = faceDetect(img)
     [angle, dx, dy, leftEye, rightEye, mouth] = faceAlignment(face);
     
     % Size of cropped image
-    %xSize = (rightEye(1)-leftEye(1))+200;
-    %ySize = (mouth(2)-rightEye(2))+100;
+    xSize = (rightEye(1)-leftEye(1))+200;
+    ySize = (mouth(2)-rightEye(2))+100;
     
     % Normalize mask
     normMask = imrotate(face, angle);
     normMask = imtranslate(normMask,[dx,dy]);
-    targetSize = [330 260];
+    targetSize = [floor(xSize) floor(ySize)];
     r = centerCropWindow2d(size(normMask),targetSize);
     normMask = imcrop(normMask,r);
     
@@ -42,6 +64,7 @@ function face = faceDetect(img)
     normFace = imtranslate(normFace,[dx,dy]);
     normFace = rgb2gray(normFace);
     normFace = imcrop(normFace,r);
+    normFace = imresize(normFace, [330 260]);
         
 %     % Get normalized face eye and mouth
 %     props = regionprops(normMask,'centroid');
@@ -97,7 +120,9 @@ end
 function id = tnm034(img)
     img = imgProcess(img); % illumination, color etc.
     img = faceDetect(img); %rotation, scale, normalization etc.
+    
+    id = img;
 
     %featExtract(img) find features
-    id = faceRecog(img); %Match features with db
+    %id = faceRecog(img); %Match features with db
 end
