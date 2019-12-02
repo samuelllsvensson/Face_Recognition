@@ -21,7 +21,7 @@ centroids = cat(1,s.Centroid);
 
 %Find center of triangle
 eyeMouthLevel = centroids(2,2) - centroids(1,2);
-centerTri = [centroids(2,1), centroids(2,2)-eyeMouthLevel/2];
+centerTri = [centroids(1,1)+floor(centroids(3,1)-centroids(1,1))/2, centroids(2,2)-eyeMouthLevel/2];
 
 dx = row/2 - centerTri(1,1);
 dy = col/2 - centerTri(1,2);

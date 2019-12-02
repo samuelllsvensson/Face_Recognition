@@ -27,13 +27,13 @@ function face = faceDetect(img)
     [angle, dx, dy, leftEye, rightEye, mouth] = faceAlignment(face);
     
     % Size of cropped image
-    xSize = (rightEye(1)-leftEye(1))+200;
-    ySize = (mouth(2)-rightEye(2))+100;
+    %xSize = (rightEye(1)-leftEye(1))+200;
+    %ySize = (mouth(2)-rightEye(2))+100;
     
     % Normalize mask
     normMask = imrotate(face, angle);
     normMask = imtranslate(normMask,[dx,dy]);
-    targetSize = [floor(xSize) floor(ySize)];
+    targetSize = [330 260];
     r = centerCropWindow2d(size(normMask),targetSize);
     normMask = imcrop(normMask,r);
     
@@ -42,7 +42,7 @@ function face = faceDetect(img)
     normFace = imtranslate(normFace,[dx,dy]);
     normFace = rgb2gray(normFace);
     normFace = imcrop(normFace,r);
-    
+        
     % Get normalized face eye and mouth
     props = regionprops(normMask,'centroid');
     centroids = cat(1,props.Centroid);
