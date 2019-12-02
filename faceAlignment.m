@@ -1,5 +1,4 @@
-function [angle, dx, dy] = faceAlignment(img)
-BW = im2bw(img);
+function [angle, dx, dy, leftEye, rightEye, mouth] = faceAlignment(BW)
 s = regionprops(BW,'centroid');
 centroids = cat(1,s.Centroid);
 
@@ -13,8 +12,9 @@ if(m > 1 && n > 1)
     angle = radtodeg(atan(eyeLevel/eyeDist));
 end
 
-imgRot = imrotate(img, angle);
-BW = im2bw(imgRot);
+%imgRot = imrotate(img, angle);
+ 
+BW = imrotate(BW, angle);
 [col,row, ~] = size(BW);
 s = regionprops(BW,'centroid');
 centroids = cat(1,s.Centroid);
@@ -23,6 +23,9 @@ centroids = cat(1,s.Centroid);
 eyeMouthLevel = centroids(2,2) - centroids(1,2);
 centerTri = [centroids(2,1), centroids(2,2)-eyeMouthLevel/2];
 
-dx = col/2 - centerTri(1,1);
-dy = row/2 - centerTri(1,2);
+dx = row/2 - centerTri(1,1);
+dy = col/2 - centerTri(1,2);
+leftEye = centroids(1,:);
+mouth = centroids(2,:);
+rightEye = centroids(3,:);
 end
