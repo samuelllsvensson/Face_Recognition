@@ -3,7 +3,7 @@ faceVariations = zeros(85800, 15);
 
 for i=1:16
   originalImg = imread(sprintf('DB1/db1_%02d.jpg', i));
-  id = tnm034(originalImg);
+  id = im2double(tnm034(originalImg));
   baseVectors(:, i) = id(:);
 end
 
@@ -12,16 +12,26 @@ baseVectors(:, 8) = [];
 avgFace = (1.0/15.0)*sum(baseVectors, 2);
 faceVariations = baseVectors - avgFace;
 
+%imshow(reshape(faceVariations(:, 2), [330, 260]));
+
 C = faceVariations' * faceVariations;
 
-[eigVec, eigVal] = eig(C);
+[eigVec, ~] = eig(C);
 
 bestEigVecs = faceVariations * eigVec;
 
-apa = bestEigVe
+%imshow(reshape(bestEigVecs(:, 15), [330, 260]));
 
-imshow(reshape(bestEigVecs(:, 2), [330, 260]));
+weights = bestEigVecs' * faceVariations(:, 8);
 
+nono = bestEigVecs * weights;
+
+apa = avgFace + bestEigVecs * weights;
+
+imshow(reshape(apa, [330, 260]), []);
+
+%figure; hold on;
+%imshow(reshape(avgFace, [330, 260]), []);
 
 %Image processing function
 function image = imgProcess(img)
