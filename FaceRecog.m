@@ -1,5 +1,7 @@
+clear;
+clc;
+
 baseVectors = zeros(85800, 16);
-faceVariations = zeros(85800, 15);
 
 for i=1:16
   originalImg = imread(sprintf('DB1/db1_%02d.jpg', i));
@@ -7,10 +9,16 @@ for i=1:16
   baseVectors(:, i) = id(:);
 end
 
+testImg = imread('DB2/ex_03.jpg');
+testId = im2double(tnm034(testImg));
+imshow(testId);
+testBaseVector = testId(:);
+
 baseVectors(:, 8) = [];
 
 avgFace = (1.0/15.0)*sum(baseVectors, 2);
 faceVariations = baseVectors - avgFace;
+testFaceVariation = testBaseVector - avgFace;
 
 %imshow(reshape(faceVariations(:, 2), [330, 260]));
 
@@ -22,11 +30,27 @@ bestEigVecs = faceVariations * eigVec;
 
 %imshow(reshape(bestEigVecs(:, 15), [330, 260]));
 
-weights = bestEigVecs' * faceVariations(:, 13);
+weights = bestEigVecs' * faceVariations; % Transposed?
+testWeight = bestEigVecs' * testFaceVariation;
 
-apa = avgFace + bestEigVecs * weights;
+smallestDistance = 10000000000;
+smallestI = -1;
 
-imshow(reshape(apa, [330, 260]), []);
+for i=1:15
+    distance = norm(weights(:, i)-testWeight);
+    if (distance<smallestDistance)
+        smallestDistance = distance;
+        smallestI = i;
+    end
+end
+
+figure; hold on;
+imshow(reshape(baseVectors(:, smallestI), [330, 260]));
+
+
+%apa = avgFace + bestEigVecs * weights;
+
+%imshow(reshape(apa, [330, 260]), []);
 
 %figure; hold on;
 %imshow(reshape(avgFace, [330, 260]), []);
