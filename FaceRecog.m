@@ -72,11 +72,12 @@ function face = faceDetect(img)
     
     % Get eye and mouth map
     imgEye = getEyeMap(faceMask);
-    imgMouth = getMouthMap(faceMask);
-    eyeMouthImg = imgEye|imgMouth;
+    [imgMouth, mouthX, mouthY] = getMouthMap(faceMask);  
+    figure;
     
     % Get eye-mouth triangle
-    face = getCandidates(eyeMouthImg);
+    imgEye = getCandidates(imgEye, mouthX, mouthY);
+    face = imgEye|imgMouth;
     
     % Align face
     [angle, dx, dy, leftEye, rightEye, mouth] = faceAlignment(face);
@@ -134,6 +135,7 @@ function face = faceDetect(img)
 %     title('Normalized face');
 
     face = normFace;
+    imshow(face);
 end
 
 %Feature extraction function
