@@ -9,9 +9,8 @@ for i=1:16
   baseVectors(:, i) = id(:);
 end
 
-testImg = imread('DB2/ex_03.jpg');
+testImg = imread('DB2/cl_16.jpg');
 testId = im2double(tnm034(testImg));
-imshow(testId);
 testBaseVector = testId(:);
 
 baseVectors(:, 8) = [];
@@ -30,22 +29,14 @@ bestEigVecs = faceVariations * eigVec;
 
 %imshow(reshape(bestEigVecs(:, 15), [330, 260]));
 
-weights = bestEigVecs' * faceVariations; % Transposed?
+weights = bestEigVecs' * faceVariations;
 testWeight = bestEigVecs' * testFaceVariation;
 
-smallestDistance = 10000000000;
-smallestI = -1;
+diff = weights-testWeight;
+
+smallestDiff = 0;
 
 for i=1:15
-    distance = norm(weights(:, i)-testWeight);
-    if (distance<smallestDistance)
-        smallestDistance = distance;
-        smallestI = i;
-    end
-end
-
-figure; hold on;
-imshow(reshape(baseVectors(:, smallestI), [330, 260]));
 
 
 %apa = avgFace + bestEigVecs * weights;

@@ -15,10 +15,6 @@ function image = getEyeMap(img)
     imshow(iycbcr);
     title('YCBCR space');
     y=iycbcr(:,:,1);
-    cb=iycbcr(:,:,2);
-    cr=iycbcr(:,:,3);
-
-    % Y
     subplot(6,4,5)
     imshow(y);
     title('Y');
@@ -33,8 +29,22 @@ function image = getEyeMap(img)
     imshow(cr);
     title('CR');
 
+    %subplot(6,4,5)
+    %imshow(y)
+    %title('Y');
+
+    % Cb
+    %subplot(6,4,6)
+    %imshow(cb)
+    %title('CB');
+
+    % Cr
+    %subplot(6,4,7)
+    %imshow(cr)
+    %title('CR');
+
     % Cr^2 
-    subplot(6,4,8)
+    %subplot(6,4,8)
     cr2 = cr.^2;
     imshow(cr2);
     title('CR^2');
@@ -158,6 +168,6 @@ function image = getEyeMap(img)
     title('Total (All methods)');
 
     % ----------
-    sgtitle('HYBRID METHOD FOR EYE DETECTION ')
+    %sgtitle('HYBRID METHOD FOR EYE DETECTION ')
     image = OrTotal;
 end
