@@ -15,6 +15,9 @@ function image = getEyeMap(img)
     imshow(iycbcr);
     title('YCBCR space');
     y=iycbcr(:,:,1);
+    cb = iycbcr(:,:,2);
+    cr = iycbcr(:,:,3);
+    
     subplot(6,4,5)
     imshow(y);
     title('Y');
