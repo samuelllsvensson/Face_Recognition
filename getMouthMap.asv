@@ -1,4 +1,4 @@
-function [mMap, x, y] = getMouthMap(image)
+function mMap = getMouthMap(image)
     imgMod = rgb2ycbcr(image);
     imgMod = im2double(imgMod);
 
@@ -23,9 +23,4 @@ function [mMap, x, y] = getMouthMap(image)
     mMap = imdilate(mMap, se);
 
     mMap = (mMap > 0.95);
-    
-    s = regionprops(mMap,'centroid');
-    centroids = cat(1,s.Centroid);
-    x = centroids(1,1);
-    y = centroids(1,2);
 end
