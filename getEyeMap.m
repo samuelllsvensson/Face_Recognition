@@ -1,6 +1,6 @@
 % ---------- ILLUMINATION-BASED METHOD -----------
 % Original
-function image = getEyeMap(img)
+function image = getEyeMap(img, originalImg)
     % Read image
     rgbImage = img;
 
@@ -114,7 +114,7 @@ function image = getEyeMap(img)
     % ---------- COLOR-BASED METHOD -----------
 
     % GRAY SPACE IMAGE
-    igray=rgb2gray(rgbImage);
+    igray=rgb2gray(originalImg);
     %subplot(6,4,16)
     %imshow(igray);
     %title('Gray space');
@@ -123,7 +123,7 @@ function image = getEyeMap(img)
     %subplot(6,4,17)
     %imshow(J);
     %title('Histogram equalized');
-    threshold = 20; % custom threshold value
+    threshold = 0; % custom threshold value
     grayThresh = J < threshold;
     grayThresh = ruleRefinements(grayThresh);
     %subplot(6,4,18)
@@ -136,7 +136,7 @@ function image = getEyeMap(img)
     %imshow(sobelIm);
     %title('Sobel edges');
 
-    SE2=strel('disk',5);
+    SE2=strel('disk', 4);
     sobelImD1 = imdilate(sobelIm, SE2);
     sobelImD2 = imdilate(sobelImD1, SE2);
     sobelImE1=imerode(sobelImD2,SE2);
