@@ -1,5 +1,5 @@
 %Return final face image
-function face = faceDetect(img)
+function [face, faceFound] = faceDetect(img)
     % Get face mask
     faceMask = getFaceMask(img);
     
@@ -8,10 +8,18 @@ function face = faceDetect(img)
     [imgMouth, mouthX, mouthY] = getMouthMap(faceMask);
     
     % Get eye-mouth triangle
-    %imshow(img); If you want to test getGandidates
-    imgEye = getCandidates(imgEye, mouthX, mouthY);
+    [imgEye, faceFound] = getCandidates(imgEye, mouthX, mouthY);
+
     face = imgEye|imgMouth;
-        
+    
+    props = regionprops(face,'centroid');
+    centroids = cat(1,props.Centroid);
+    [m,~] = size(centroids);
+    
+    if faceFound == false || m < 3
+        return
+    end
+    
     % Align face
     [angle, dx, dy, leftEye, rightEye, mouth] = faceAlignment(face);
     
@@ -23,9 +31,16 @@ function face = faceDetect(img)
     normMask = imrotate(face, angle);
     normMask = imtranslate(normMask,[dx,dy]);
     targetSize = [floor(xSize) floor(ySize)];
-    r = centerCropWindow2d(size(normMask),targetSize);
-    normMask = imcrop(normMask,r);
+  
+    if size(normMask) > abs(targetSize)
+        r = centerCropWindow2d(size(normMask),abs(targetSize));
+    else
+        faceFound = false;
+        return
+    end
     
+    %normMask = imcrop(normMask,r);
+   
     % Normalize face
     normFace = imrotate(img, angle);
     normFace = imtranslate(normFace,[dx,dy]);

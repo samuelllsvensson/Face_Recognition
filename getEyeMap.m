@@ -139,7 +139,7 @@ function image = getEyeMap(img, originalImg)
     %imshow(sobelIm);
     %title('Sobel edges');
 
-    SE2=strel('disk', 4);
+    SE2=strel('disk', 5);
     sobelImD1 = imdilate(sobelIm, SE2);
     sobelImD2 = imdilate(sobelImD1, SE2);
     sobelImE1=imerode(sobelImD2,SE2);
