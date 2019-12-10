@@ -9,6 +9,7 @@ function [face, faceFound] = faceDetect(img)
     
     % Get eye-mouth triangle
     [imgEye, faceFound] = getCandidates(imgEye, mouthX, mouthY);
+
     face = imgEye|imgMouth;
     
     props = regionprops(face,'centroid');

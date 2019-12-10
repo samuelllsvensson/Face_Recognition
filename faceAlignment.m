@@ -9,7 +9,7 @@ angle = 0;
 if(m > 1 && n > 1)
     eyeDist = centroids(m,1) - centroids(1,1);
     eyeLevel = centroids(m,2) - centroids(1,2);
-    angle = radtodeg(atan(eyeLevel/eyeDist));
+    angle = rad2deg(atan(eyeLevel/eyeDist));
 end
 
 %imgRot = imrotate(img, angle);

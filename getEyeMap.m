@@ -1,9 +1,8 @@
-% ---------- ILLUMINATION-BASED METHOD -----------
-% Original
 function image = getEyeMap(img, originalImg)
     % Read image
     rgbImage = img;
-
+    
+    % ---------- ILLUMINATION-BASED METHOD -----------
     %subplot(6,4,1)
     %imshow(rgbImage);
     %title('original image');
@@ -96,7 +95,7 @@ function image = getEyeMap(img, originalImg)
     %title('Eye Map L');
 
     % TOTAL EYEMAP 
-    Eyemap = eyemapChist.*eyemapL; % BORDE VARA DENNA ENLIGT PAPER
+    Eyemap = eyemapChist.*eyemapL;
     %subplot(6,4,14)
     %imshow(Eyemap);
     %title('Eye Map C fused with Eye Map L')
@@ -104,15 +103,16 @@ function image = getEyeMap(img, originalImg)
     % DILATED AND THRESHHOLDED
     SE1=strel('disk', 10);
     q = imdilate(Eyemap, SE1);
-    threshold = 0.75; % custom threshold value
+    threshold = 0.75;
     qMask = q > threshold;
+    
+    % Apply rules
     qMask = ruleRefinements(qMask);
-    %BW = imbinarize(q, 'adaptive');
     %subplot(6,4,15)
     %imshow(qMask);
     %title('Dilated and threshholded');
+    
     % ---------- COLOR-BASED METHOD -----------
-
     % GRAY SPACE IMAGE
     igray=rgb2gray(originalImg);
     %subplot(6,4,16)
@@ -123,9 +123,12 @@ function image = getEyeMap(img, originalImg)
     %subplot(6,4,17)
     %imshow(J);
     %title('Histogram equalized');
-    threshold = 0; % custom threshold value
+    threshold = 0; 
     grayThresh = J < threshold;
+    
+    % Apply rules
     grayThresh = ruleRefinements(grayThresh);
+    
     %subplot(6,4,18)
     %imshow(grayThresh);
     %title('Threshholded');
@@ -143,6 +146,7 @@ function image = getEyeMap(img, originalImg)
     sobelImE2=imerode(sobelImE1,SE2);
     sobelImE3=imerode(sobelImE2,SE2);
     
+    % Apply rules
     sobelImE3 = ruleRefinements(sobelImE3);
 
     %subplot(6,4,20)
