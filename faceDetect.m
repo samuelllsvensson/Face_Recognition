@@ -8,6 +8,7 @@ function face = faceDetect(img)
     [imgMouth, mouthX, mouthY] = getMouthMap(faceMask);
     
     % Get eye-mouth triangle
+    %imshow(img); If you want to test getGandidates
     imgEye = getCandidates(imgEye, mouthX, mouthY);
     face = imgEye|imgMouth;
         
