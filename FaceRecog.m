@@ -1,7 +1,7 @@
 clear;
 clc;
 
-id = tnm034(imread('DB2/bl_01.jpg'));
+id = tnm034(imread('DBegen/db1_09.jpg'));
 
 %Feature extraction function
 %Return feature vector for this img
@@ -12,12 +12,14 @@ end
 
 %Main function
 function id = tnm034(img)
-    [trainWeights, avgFace, bestEigVecs] = trainDb();
+    numberOfFaces = 450;
+    numberOfPersons = 5;
+    [trainWeights, avgFace, bestEigVecs] = trainDb(numberOfFaces, numberOfPersons);
 
     originalImg = img;
     processedImg = imgProcess(originalImg); % illumination, color etc.
     detectedFace = faceDetect(processedImg); %rotation, scale, normalization etc.
 
     %featExtract(img) find features
-    id = faceRecognition(detectedFace, trainWeights, avgFace, bestEigVecs); %Match features with db
+    id = faceRecognition(detectedFace, trainWeights, avgFace, bestEigVecs, numberOfFaces, numberOfPersons) %Match features with db
 end

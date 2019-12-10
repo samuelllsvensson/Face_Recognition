@@ -1,4 +1,4 @@
-function id = faceRecognition(img, trainWeights, avgFace, bestEigVecs)
+function id = faceRecognition(img, trainWeights, avgFace, bestEigVecs, numberOfFaces, numberOfPersons)
     testId = im2double(img);
     testBaseVector = testId(:);
 
@@ -9,8 +9,6 @@ function id = faceRecognition(img, trainWeights, avgFace, bestEigVecs)
     smallestDistance = 10000000000;
     smallestI = -1;
     
-    numberOfFaces = 16;
-
     for i=1:numberOfFaces
         distance = norm(testWeight-trainWeights(:, i));
         if (distance<smallestDistance)

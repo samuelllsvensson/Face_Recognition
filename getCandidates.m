@@ -1,9 +1,13 @@
-function image = getCandidates(img, mouthX, mouthY)
+function [image, faceFound] = getCandidates(img, mouthX, mouthY)
     props = regionprops(img,'centroid', 'PixelIdxList');
     centroids = cat(1,props.Centroid);
     [m,n] = size(centroids);
     if m < 2
+        faceFound = false;
+        image = img;
         return
+    else
+        faceFound = true;
     end
     
     candidateArr = [1,2]; % Array with most likely candidates
