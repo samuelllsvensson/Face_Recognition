@@ -29,13 +29,13 @@ function image = getCandidates(img, mouthX, mouthY)
             minX = eye1(1);
             maxX = eye2(1);
 
-            % Angles 
+            % Angles
             angle1 = acos((dot(vector1, vector2)/dot(norm(vector1), norm(vector2)))); % Angle at eye 1
             angle2 = acos((dot(-vector1, vector3)/dot(norm(vector1), norm(vector3)))); % Angle at eye 2
 
             % If conditions for face triangle are met - reassign new
             % best candidates
-            if  (eye2(2) > eye1(2)*0.95 && eye2(2) < eye1(2)*1.05 && mouth(2) > eye1(2) &&...
+            if  (eye2(2) > eye1(2)*0.9 && eye2(2) < eye1(2)*1.1 && mouth(2) > eye1(2) &&...
                      mouth(1) > minX && mouth(1) < maxX && abs(angle1-critAngle) <= bestAngle1 && abs(angle2-critAngle) <= bestAngle2)
 
                 bestAngle1 = abs(angle1-critAngle);
