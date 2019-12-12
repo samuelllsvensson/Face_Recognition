@@ -34,6 +34,7 @@ for i = 1:numOfPersons
 end
 
 [eigVecW, ~] = eig(covBetween*covWithin');
+eigVecW = real(eigVecW);
 
 avgFace = totalMean;
 faceVariations = meanVec - avgFace;
