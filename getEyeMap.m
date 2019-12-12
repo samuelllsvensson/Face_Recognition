@@ -101,7 +101,7 @@ function image = getEyeMap(img, originalImg)
     %title('Eye Map C fused with Eye Map L')
 
     % DILATED AND THRESHHOLDED
-    SE1=strel('disk', 10);
+    SE1=strel('disk', 9);
     q = imdilate(Eyemap, SE1);
     threshold = 0.75;
     qMask = q > threshold;
@@ -139,7 +139,7 @@ function image = getEyeMap(img, originalImg)
     %imshow(sobelIm);
     %title('Sobel edges');
 
-    SE2=strel('disk', 5);
+    SE2=strel('disk', 4); % 4 is better but 5 is needed for 450 images
     sobelImD1 = imdilate(sobelIm, SE2);
     sobelImD2 = imdilate(sobelImD1, SE2);
     sobelImE1=imerode(sobelImD2,SE2);

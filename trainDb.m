@@ -4,7 +4,7 @@ function [trainWeights, avgFace, bestEigVecs] = trainDb(maxNumberOfFaces, number
 
     baseVectors = zeros(85800, numberOfFaces);
     for i=1:maxNumberOfFaces
-        originalImg = imread(sprintf('faces/image_%04d.jpg', i));
+        originalImg = imread(sprintf('DB4/image_%04d.jpg', i)); %DB3/image_%04d.jpg DB1/db1_%02d.jpg
         processedImg = imgProcess(originalImg);
         [detectedFace, faceFound] = faceDetect(processedImg);
         id = im2double(detectedFace);
@@ -27,10 +27,11 @@ function [trainWeights, avgFace, bestEigVecs] = trainDb(maxNumberOfFaces, number
     C = faceVariations' * faceVariations;
 
     [eigVec, ~] = eig(C);
+    numOfBestEig = numberOfFaces - 100
 
     bestEigVecs = faceVariations * eigVec;
     bestEigVecs = normc(bestEigVecs);
-    bestEigVecs = bestEigVecs(:, :);
+    bestEigVecs = bestEigVecs(:, numOfBestEig:numberOfFaces);
 
     trainWeights = bestEigVecs' * faceVariations;
 end

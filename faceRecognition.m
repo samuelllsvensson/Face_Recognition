@@ -9,7 +9,7 @@ function id = faceRecognition(img, trainWeights, avgFace, bestEigVecs, numberOfF
     smallestDistance = 10000000000;
     smallestI = -1;
 
-    for i=1:numberOfPersons % i=1:numberOfFaces for eigenfaces
+    for i=1:numberOfFaces % i=1:numberOfFaces for eigenfaces, numberOfPeople for fisher
         distance = norm(testWeight-trainWeights(:, i));
         if (distance<smallestDistance)
             smallestDistance = distance;

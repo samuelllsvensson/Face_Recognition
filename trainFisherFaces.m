@@ -10,9 +10,18 @@ baseVectors = zeros(85800, numOfFaces);
 for i=1:numOfFaces
   originalImg = imread(sprintf('DB3/image_%04d.jpg', i));
   processedImg = imgProcess(originalImg);
-  detectedFace = faceDetect(processedImg);
+  [detectedFace, faceFound] = faceDetect(processedImg);
   id = im2double(detectedFace);
-  baseVectors(:, i) = id(:);
+  
+  if size(id(:)) ~= 85800
+            faceFound = false;
+        end
+        if ~faceFound
+            baseVectors(:, i) = zeros(85800,1);
+        else        
+            baseVectors(:, i) = id(:);
+            numberOfFaces = numberOfFaces + 1;
+        end
 end
 
 meanVec = zeros(85800, numOfPersons);
