@@ -16,6 +16,7 @@ function [face, faceFound] = faceDetect(img)
     centroids = cat(1,props.Centroid);
     [m,~] = size(centroids);
     
+    % Discard if eye and mouth candidates are not found
     if faceFound == false || m < 3
         return
     end
@@ -38,49 +39,13 @@ function [face, faceFound] = faceDetect(img)
         faceFound = false;
         return
     end
-    
-    %normMask = imcrop(normMask,r);
-   
+       
     % Normalize face
     normFace = imrotate(img, angle);
     normFace = imtranslate(normFace,[dx,dy]);
     normFace = rgb2gray(normFace);
     normFace = imcrop(normFace,r);
     normFace = imresize(normFace, [330 260]);
-        
-%     % Get normalized face eye and mouth
-%     props = regionprops(normMask,'centroid');
-%     centroids = cat(1,props.Centroid);
-%     normLeftEye = centroids(1,:);
-%     normRightEye = centroids(3,:);
-%     normMouth = centroids(2,:);
-%     
-%     % Create markers
-%     pos = [normLeftEye; normRightEye; normMouth];
-%     color = {'red','red','red'};
-%     markedFace = insertMarker(normFace,pos,'x','color',color,'size',12);
-%    
-%     % Plot normalized face
-%     figure;
-%     subplot(1,5,1)
-%     imshow(img);
-%     title('Original');
-%     
-%     subplot(1,5,2)
-%     imshow(eyeMouthImg);
-%     title('Before candidates');
-%     
-%     subplot(1,5,3)
-%     imshow(face);
-%     title('After candidates');
-%     
-%     subplot(1,5,4)
-%     imshow(normMask);
-%     title('After Alignment');
-%     
-%     subplot(1,5,5)
-%     imshow(markedFace);
-%     title('Normalized face');
 
     face = normFace;
 end

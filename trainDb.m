@@ -4,11 +4,12 @@ function [trainWeights, avgFace, bestEigVecs] = trainDb(maxNumberOfFaces, number
 
     baseVectors = zeros(85800, numberOfFaces);
     for i=1:maxNumberOfFaces
-        originalImg = imread(sprintf('DB4/image_%04d.jpg', i)); %DB3/image_%04d.jpg DB1/db1_%02d.jpg
+        originalImg = imread(sprintf('DB4/image_%04d.jpg', i));
         processedImg = imgProcess(originalImg);
         [detectedFace, faceFound] = faceDetect(processedImg);
         id = im2double(detectedFace);
         
+        % Discard images of wrong dimensions and lack of eye-mouth candidates
         if size(id(:)) ~= 85800
             faceFound = false;
         end
@@ -19,7 +20,6 @@ function [trainWeights, avgFace, bestEigVecs] = trainDb(maxNumberOfFaces, number
             numberOfFaces = numberOfFaces + 1;
         end
     end
-    numberOfFaces
 
     avgFace = (1.0/numberOfFaces)*sum(baseVectors, 2);
     faceVariations = baseVectors - avgFace;
@@ -27,11 +27,12 @@ function [trainWeights, avgFace, bestEigVecs] = trainDb(maxNumberOfFaces, number
     C = faceVariations' * faceVariations;
 
     [eigVec, ~] = eig(C);
-    numOfBestEig = numberOfFaces - 100
+    numOfWantedEig = 293;
+    numOfBestEig = numberOfFaces - numOfWantedEig;
 
     bestEigVecs = faceVariations * eigVec;
     bestEigVecs = normc(bestEigVecs);
-    bestEigVecs = bestEigVecs(:, numOfBestEig:numberOfFaces);
+    bestEigVecs = bestEigVecs(:, numOfBestEig:numberOfFaces); % Choose number of faces to use
 
     trainWeights = bestEigVecs' * faceVariations;
 end

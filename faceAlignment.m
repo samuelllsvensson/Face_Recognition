@@ -11,8 +11,6 @@ if(m > 1 && n > 1)
     eyeLevel = centroids(m,2) - centroids(1,2);
     angle = rad2deg(atan(eyeLevel/eyeDist));
 end
-
-%imgRot = imrotate(img, angle);
  
 BW = imrotate(BW, angle);
 [col,row, ~] = size(BW);

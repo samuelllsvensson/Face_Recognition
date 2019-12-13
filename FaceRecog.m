@@ -2,8 +2,7 @@ clear;
 clc;
 numRight = 0;
 for i = 1:16
-    %id = tnm034(imread('DB1/db1_16.jpg'));
-    id = tnm034(imread(sprintf('DB1/db1_%02d.jpg', i)));
+     id = tnm034(imread(sprintf('DB1/db1_%02d.jpg', i)));
     
     if id == i
         numRight = numRight + 1;
@@ -19,7 +18,7 @@ function id = tnm034(img)
     trainWeights = load('trainWeights.mat').trainWeights; 
 
     numberOfFaces = 450; % 450 for whole database
-    numberOfPersons = 5; % Not used for Eigen
+    numberOfPersons = 5; %Only used for fisher faces
     
     % Train with fisher faces
     %[trainWeights, avgFace, bestEigVecs] = trainFisherFaces(numberOfFaces, numberOfPersons);
@@ -34,10 +33,16 @@ function id = tnm034(img)
 
     originalImg = img;
     processedImg = imgProcess(originalImg); % Illumination and color normalization.
-    detectedFace = faceDetect(processedImg); % Rotation, scale, normalization etc.
+    [detectedFace, faceFound] = faceDetect(processedImg); % Rotation, scale, normalization etc.
+    
+    if faceFound == false
+       id = 0;
+       return
+    end
 
     id = faceRecognition(detectedFace, trainWeights, avgFace, bestEigVecs, numberOfFaces, numberOfPersons) % Match features with db
     
+    % Return correct id
     if id <= 21
         id = 1 
     elseif id <= 41

@@ -1,4 +1,4 @@
-% Light compensation with reference white
+% Light compensation with reference white alternative (Used)
 function image = lightCompensationAlt(img)
     imgSize = size(img);
     lightPixelsAmount = 0.01;

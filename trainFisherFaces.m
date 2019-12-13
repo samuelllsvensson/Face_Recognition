@@ -13,15 +13,16 @@ for i=1:numOfFaces
   [detectedFace, faceFound] = faceDetect(processedImg);
   id = im2double(detectedFace);
   
+  % Discard images of wrong dimensions and lack of eye-mouth candidates
   if size(id(:)) ~= 85800
             faceFound = false;
-        end
-        if ~faceFound
-            baseVectors(:, i) = zeros(85800,1);
-        else        
-            baseVectors(:, i) = id(:);
-            numberOfFaces = numberOfFaces + 1;
-        end
+  end
+  if ~faceFound
+    baseVectors(:, i) = zeros(85800,1);
+  else        
+    baseVectors(:, i) = id(:);
+    numberOfFaces = numberOfFaces + 1;
+  end
 end
 
 meanVec = zeros(85800, numOfPersons);
