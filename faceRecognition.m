@@ -17,6 +17,14 @@ function id = faceRecognition(img, trainWeights, avgFace, bestEigVecs, numberOfF
         end
     end
     
+    % Threshold for rejecting faces
+    threshold = 20;
+    
+    if smallestDistance > threshold
+        id = 0;
+        return
+    end
+    
     id = smallestI;
     
     % Return correct id
